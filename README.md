@@ -2,7 +2,7 @@
 
 A tiny React component that renders the active Tailwind CSS breakpoint in the bottom-left corner of the viewport.
 
-It is based on the `TailwindIndicator` used in FacilityMonster. The original behavior is preserved: if you do not pass `enabled`, the indicator only renders when `NEXT_PUBLIC_ENV=dev`.
+If you do not pass `enabled`, the indicator renders only when `NEXT_PUBLIC_ENV=dev`.
 
 Click the indicator to hide it for the current page load. It does not write to local storage or session storage, so refreshing the page brings it back.
 
@@ -29,7 +29,7 @@ export function App() {
 }
 ```
 
-By default this mirrors FacilityMonster and renders only when:
+By default, the indicator renders only when:
 
 ```env
 NEXT_PUBLIC_ENV=dev
@@ -58,7 +58,7 @@ export default function Page() {
 }
 ```
 
-You can also use the FacilityMonster-compatible alias:
+You can also use the shorter alias:
 
 ```tsx
 import { TailwindIndicator } from 'tailwind-breakpoint-indicator'
@@ -84,7 +84,7 @@ You can wire this to any flag you prefer:
 
 ## Tailwind Setup
 
-This package intentionally uses Tailwind classes, just like the FacilityMonster component. Make sure Tailwind scans the package output so these classes are generated.
+This package intentionally uses Tailwind classes. Make sure Tailwind scans the package output so these classes are generated.
 
 ```js
 /** @type {import('tailwindcss').Config} */
