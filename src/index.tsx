@@ -31,7 +31,7 @@ declare const process:
   | undefined
 
 const DEFAULT_CLASS_NAME =
-  'group fixed bottom-1 left-1 z-[100000000000] flex h-6 w-6 cursor-pointer select-none items-center justify-center rounded-full border-0 bg-[rgba(0,0,0,0.4)] p-4 font-mono text-xs text-white relative appearance-none'
+  'group fixed bottom-2 left-2 z-[100000000000] flex h-6 w-6 cursor-pointer select-none items-center justify-center rounded-full border-0 bg-[rgba(0,0,0,0.4)] p-4 font-mono text-xs text-white relative appearance-none'
 
 const WIDTH_LABEL_CLASS_NAME =
   'pointer-events-none absolute left-10 top-1/2 whitespace-nowrap rounded-[6px] bg-[rgba(0,0,0,0.78)] px-2 py-[6px] text-xs leading-none text-white opacity-0 -translate-y-1/2 translate-x-1 transition-all duration-150 group-hover:translate-x-0 group-hover:opacity-100 group-focus-visible:translate-x-0 group-focus-visible:opacity-100'
