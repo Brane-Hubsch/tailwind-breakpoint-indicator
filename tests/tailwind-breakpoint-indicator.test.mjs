@@ -69,6 +69,16 @@ describe('TailwindBreakpointIndicator', () => {
     assert.match(html, /bottom-4 left-4/)
   })
 
+  it('hides itself for the current page load when clicked', () => {
+    const element = TailwindBreakpointIndicator({ enabled: true })
+    const currentTarget = { hidden: false }
+
+    element.props.onClick({ currentTarget })
+
+    assert.equal(element.type, 'button')
+    assert.equal(currentTarget.hidden, true)
+  })
+
   it('exports a TailwindIndicator alias', () => {
     assert.equal(TailwindIndicator, TailwindBreakpointIndicator)
   })

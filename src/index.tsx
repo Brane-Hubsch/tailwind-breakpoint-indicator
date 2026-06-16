@@ -29,7 +29,7 @@ declare const process:
   | undefined
 
 const DEFAULT_CLASS_NAME =
-  'fixed bottom-1 left-1 z-[100000000000] flex h-6 w-6 items-center justify-center rounded-full bg-[rgba(0,0,0,0.4)] p-4 font-mono text-xs text-white'
+  'fixed bottom-1 left-1 z-[100000000000] flex h-6 w-6 cursor-pointer select-none items-center justify-center rounded-full border-0 bg-[rgba(0,0,0,0.4)] p-4 font-mono text-xs text-white'
 
 const BREAKPOINTS: Array<{ key: Breakpoint; className: string }> = [
   { key: 'xs', className: 'block sm:hidden' },
@@ -63,17 +63,22 @@ export function TailwindBreakpointIndicator({
   }
 
   return (
-    <div
+    <button
       aria-label="Tailwind breakpoint indicator"
       className={cx(DEFAULT_CLASS_NAME, className)}
       data-testid="tailwind-breakpoint-indicator"
+      onClick={(event) => {
+        event.currentTarget.hidden = true
+      }}
+      title="Hide Tailwind breakpoint indicator"
+      type="button"
     >
       {BREAKPOINTS.map((breakpoint) => (
         <div className={breakpoint.className} key={breakpoint.key}>
           {labels[breakpoint.key] ?? breakpoint.key}
         </div>
       ))}
-    </div>
+    </button>
   )
 }
 

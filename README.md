@@ -4,6 +4,8 @@ A tiny React component that renders the active Tailwind CSS breakpoint in the bo
 
 It is based on the `TailwindIndicator` used in FacilityMonster. The original behavior is preserved: if you do not pass `enabled`, the indicator only renders when `NEXT_PUBLIC_ENV=dev`.
 
+Click the indicator to hide it for the current page load. It does not write to local storage or session storage, so refreshing the page brings it back.
+
 ## Install
 
 ```sh
@@ -110,9 +112,12 @@ export default {
     'flex',
     'h-6',
     'w-6',
+    'cursor-pointer',
+    'select-none',
     'items-center',
     'justify-center',
     'rounded-full',
+    'border-0',
     'bg-[rgba(0,0,0,0.4)]',
     'p-4',
     'font-mono',
@@ -204,4 +209,12 @@ The component does not measure the viewport in JavaScript. It renders one label 
 <div className="hidden lg:block xl:hidden">lg</div>
 <div className="hidden xl:block 2xl:hidden">xl</div>
 <div className="hidden 2xl:block">2xl</div>
+```
+
+The hide interaction is intentionally temporary:
+
+```tsx
+onClick={(event) => {
+  event.currentTarget.hidden = true
+}}
 ```
