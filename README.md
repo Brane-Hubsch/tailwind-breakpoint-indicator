@@ -2,9 +2,14 @@
 
 A tiny React component that renders the active Tailwind CSS breakpoint in the bottom-left corner of the viewport.
 
-If you do not pass `enabled`, the indicator renders only when `NEXT_PUBLIC_ENV=dev`.
+It matches the Facility Monster-style indicator:
 
-Click the indicator to hide it for the current page load. It does not write to local storage or session storage, so refreshing the page brings it back.
+- a small dark circle in the bottom-left corner
+- the active breakpoint label inside
+- an exact pixel-width label on hover/focus
+- click to hide for the current page load
+
+If you do not pass `enabled`, the indicator renders only when `NEXT_PUBLIC_ENV=dev`.
 
 ## Install
 
@@ -13,6 +18,8 @@ npm install tailwind-breakpoint-indicator
 ```
 
 React is a peer dependency, so install it in the consuming app if it is not already present.
+
+If you install directly from a Git URL instead of the npm registry, the repo now rebuilds `dist/` through `prepare`, which avoids the old "package.json points at dist but dist is missing" problem.
 
 ## Quick Start
 
@@ -34,6 +41,24 @@ By default, the indicator renders only when:
 ```env
 NEXT_PUBLIC_ENV=dev
 ```
+
+## Demo
+
+This repo includes a small local demo in [`demo/`](./demo).
+
+From the repo root:
+
+```sh
+python3 -m http.server 4173
+```
+
+Then open:
+
+```text
+http://localhost:4173/demo/
+```
+
+The demo lives in the same repo as the package and mirrors the current package behavior.
 
 ## Next.js
 
@@ -82,6 +107,15 @@ You can wire this to any flag you prefer:
 <TailwindBreakpointIndicator enabled={import.meta.env.VITE_SHOW_BREAKPOINTS === 'true'} />
 ```
 
+## Why The Indicator Sometimes "Doesn't Show Up"
+
+The two most common reasons are:
+
+1. The component is not enabled in that environment.
+2. Tailwind never generated the package classes.
+
+If you do not see the dot at all in a consuming app, check Tailwind scanning first.
+
 ## Tailwind Setup
 
 This package intentionally uses Tailwind classes. Make sure Tailwind scans the package output so these classes are generated.
@@ -105,6 +139,7 @@ If your setup does not scan dependencies, safelist the classes used by the indic
 ```js
 export default {
   safelist: [
+    'group',
     'fixed',
     'bottom-1',
     'left-1',
@@ -123,6 +158,8 @@ export default {
     'font-mono',
     'text-xs',
     'text-white',
+    'relative',
+    'appearance-none',
     'block',
     'hidden',
     'sm:hidden',
@@ -135,6 +172,26 @@ export default {
     'xl:block',
     '2xl:hidden',
     '2xl:block',
+    'pointer-events-none',
+    'absolute',
+    'left-10',
+    'top-1/2',
+    'whitespace-nowrap',
+    'rounded-[6px]',
+    'bg-[rgba(0,0,0,0.78)]',
+    'px-2',
+    'py-[6px]',
+    'leading-none',
+    'opacity-0',
+    '-translate-y-1/2',
+    'translate-x-1',
+    'translate-x-0',
+    'transition-all',
+    'duration-150',
+    'group-hover:translate-x-0',
+    'group-hover:opacity-100',
+    'group-focus-visible:translate-x-0',
+    'group-focus-visible:opacity-100',
   ],
 }
 ```
@@ -200,21 +257,17 @@ npm run verify
 
 ## How It Works
 
-The component does not measure the viewport in JavaScript. It renders one label per breakpoint and lets Tailwind's responsive visibility utilities decide which one is visible:
+The active breakpoint label still comes from Tailwind's responsive visibility utilities:
 
 ```tsx
-<div className="block sm:hidden">xs</div>
-<div className="hidden sm:block md:hidden">sm</div>
-<div className="hidden md:block lg:hidden">md</div>
-<div className="hidden lg:block xl:hidden">lg</div>
-<div className="hidden xl:block 2xl:hidden">xl</div>
-<div className="hidden 2xl:block">2xl</div>
+<span className="block sm:hidden">xs</span>
+<span className="hidden sm:block md:hidden">sm</span>
+<span className="hidden md:block lg:hidden">md</span>
+<span className="hidden lg:block xl:hidden">lg</span>
+<span className="hidden xl:block 2xl:hidden">xl</span>
+<span className="hidden 2xl:block">2xl</span>
 ```
 
-The hide interaction is intentionally temporary:
+The exact viewport width uses `window.innerWidth` and updates on resize.
 
-```tsx
-onClick={(event) => {
-  event.currentTarget.hidden = true
-}}
-```
+The hide interaction is intentionally temporary for the current page load only.

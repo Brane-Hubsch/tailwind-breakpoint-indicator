@@ -29,6 +29,7 @@ describe('TailwindBreakpointIndicator', () => {
     assert.match(html, /lg/)
     assert.match(html, /xl/)
     assert.match(html, /2xl/)
+    assert.match(html, /0 px/)
   })
 
   it('renders nothing when disabled', () => {
@@ -69,14 +70,14 @@ describe('TailwindBreakpointIndicator', () => {
     assert.match(html, /bottom-4 left-4/)
   })
 
-  it('hides itself for the current page load when clicked', () => {
-    const element = TailwindBreakpointIndicator({ enabled: true })
-    const currentTarget = { hidden: false }
+  it('renders the hover width label classes', () => {
+    const html = renderToStaticMarkup(
+      jsx(TailwindBreakpointIndicator, { enabled: true }),
+    )
 
-    element.props.onClick({ currentTarget })
-
-    assert.equal(element.type, 'button')
-    assert.equal(currentTarget.hidden, true)
+    assert.match(html, /group-hover:opacity-100/)
+    assert.match(html, /group-focus-visible:opacity-100/)
+    assert.match(html, /left-10/)
   })
 
   it('exports a TailwindIndicator alias', () => {

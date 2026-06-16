@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>tailwind-breakpoint-indicator demo</title>
+    <link rel="stylesheet" href="./tailwind-lite.css" />
+  </head>
+  <body>
+    <main class="demo-shell">
+      <div class="demo-copy">
+        <p class="demo-eyebrow">Demo</p>
+        <h1>Tailwind breakpoint indicator</h1>
+        <p>
+          Hover the indicator to see the exact viewport width in pixels. Click
+          it to hide it for the current page load.
+        </p>
+      </div>
+    </main>
+
+    <div id="app"></div>
+
+    <script src="../node_modules/react/umd/react.development.js"></script>
+    <script src="../node_modules/react-dom/umd/react-dom.development.js"></script>
+
+    <script type="importmap">
+      {
+        "imports": {
+          "react": "./react-shim.js",
+          "react/jsx-runtime": "./react-jsx-runtime-shim.js",
+          "tailwind-breakpoint-indicator": "../dist/index.js"
+        }
+      }
+    </script>
+
+    <script type="module" src="./main.js"></script>
+  </body>
+</html>
