@@ -39,6 +39,7 @@ const DEFAULT_CLASS_NAME = 'relative'
 const WIDTH_LABEL_CLASS_NAME = 'pointer-events-none absolute whitespace-nowrap'
 
 const DEFAULT_BUTTON_STYLE: CSSProperties = {
+  alignItems: 'center',
   appearance: 'none',
   background: 'rgba(0, 0, 0, 0.4)',
   border: 0,
