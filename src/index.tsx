@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, type CSSProperties } from 'react'
 
 type Breakpoint = 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl'
 
@@ -17,6 +17,10 @@ export interface TailwindBreakpointIndicatorProps {
    */
   className?: string
   /**
+   * Inline style overrides for the outer indicator wrapper.
+   */
+  style?: CSSProperties
+  /**
    * Optional replacement labels for one or more breakpoints.
    */
   labels?: BreakpointLabels
@@ -30,11 +34,50 @@ declare const process:
     }
   | undefined
 
-const DEFAULT_CLASS_NAME =
-  'group fixed bottom-2 left-2 z-[100000000000] flex h-6 w-6 cursor-pointer select-none items-center justify-center rounded-full border-0 bg-[rgba(0,0,0,0.4)] p-4 font-mono text-xs text-white relative appearance-none'
+const DEFAULT_CLASS_NAME = 'relative'
 
-const WIDTH_LABEL_CLASS_NAME =
-  'pointer-events-none absolute left-10 top-1/2 whitespace-nowrap rounded-[6px] bg-[rgba(0,0,0,0.78)] px-2 py-[6px] text-xs leading-none text-white opacity-0 -translate-y-1/2 translate-x-1 transition-all duration-150 group-hover:translate-x-0 group-hover:opacity-100 group-focus-visible:translate-x-0 group-focus-visible:opacity-100'
+const WIDTH_LABEL_CLASS_NAME = 'pointer-events-none absolute whitespace-nowrap'
+
+const DEFAULT_BUTTON_STYLE: CSSProperties = {
+  appearance: 'none',
+  background: 'rgba(0, 0, 0, 0.4)',
+  border: 0,
+  borderRadius: '9999px',
+  bottom: '8px',
+  color: '#ffffff',
+  cursor: 'pointer',
+  display: 'flex',
+  fontFamily:
+    'ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, Liberation Mono, Courier New, monospace',
+  fontSize: '12px',
+  height: '24px',
+  justifyContent: 'center',
+  left: '8px',
+  lineHeight: 1,
+  margin: 0,
+  padding: 0,
+  position: 'fixed',
+  userSelect: 'none',
+  width: '24px',
+  zIndex: 100000000000,
+}
+
+const DEFAULT_WIDTH_LABEL_STYLE: CSSProperties = {
+  background: 'rgba(0, 0, 0, 0.78)',
+  borderRadius: '6px',
+  color: '#ffffff',
+  fontSize: '12px',
+  left: '40px',
+  lineHeight: 1,
+  opacity: 0,
+  padding: '6px 8px',
+  pointerEvents: 'none',
+  position: 'absolute',
+  top: '50%',
+  transform: 'translate(4px, -50%)',
+  transition: 'opacity 150ms ease, transform 150ms ease',
+  whiteSpace: 'nowrap',
+}
 
 const BREAKPOINTS: Array<{ key: Breakpoint; className: string }> = [
   { key: 'xs', className: 'block sm:hidden' },
@@ -63,11 +106,15 @@ function getViewportWidth() {
 export function TailwindBreakpointIndicator({
   enabled,
   className,
+  style,
   labels = {},
 }: TailwindBreakpointIndicatorProps) {
   const [dismissed, setDismissed] = useState(false)
+  const [isHovered, setIsHovered] = useState(false)
+  const [isFocusVisible, setIsFocusVisible] = useState(false)
   const [viewportWidth, setViewportWidth] = useState(getViewportWidth)
   const shouldRender = enabled ?? isEnabledByDefault()
+  const isWidthLabelVisible = isHovered || isFocusVisible
 
   useEffect(() => {
     if (typeof window === 'undefined') {
@@ -95,8 +142,24 @@ export function TailwindBreakpointIndicator({
       aria-label="Tailwind breakpoint indicator. Click to hide."
       className={cx(DEFAULT_CLASS_NAME, className)}
       data-testid="tailwind-breakpoint-indicator"
+      onBlur={() => {
+        setIsFocusVisible(false)
+      }}
       onClick={() => {
         setDismissed(true)
+      }}
+      onFocus={() => {
+        setIsFocusVisible(true)
+      }}
+      onMouseEnter={() => {
+        setIsHovered(true)
+      }}
+      onMouseLeave={() => {
+        setIsHovered(false)
+      }}
+      style={{
+        ...DEFAULT_BUTTON_STYLE,
+        ...style,
       }}
       title="Hide Tailwind breakpoint indicator"
       type="button"
@@ -106,7 +169,18 @@ export function TailwindBreakpointIndicator({
           {labels[breakpoint.key] ?? breakpoint.key}
         </span>
       ))}
-      <span className={WIDTH_LABEL_CLASS_NAME}>{viewportWidth} px</span>
+      <span
+        className={WIDTH_LABEL_CLASS_NAME}
+        style={{
+          ...DEFAULT_WIDTH_LABEL_STYLE,
+          opacity: isWidthLabelVisible ? 1 : 0,
+          transform: isWidthLabelVisible
+            ? 'translate(0, -50%)'
+            : 'translate(4px, -50%)',
+        }}
+      >
+        {viewportWidth} px
+      </span>
     </button>
   )
 }

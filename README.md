@@ -11,6 +11,8 @@ It matches the Facility Monster-style indicator:
 
 If you do not pass `enabled`, the indicator renders only when `NEXT_PUBLIC_ENV=dev`.
 
+The bottom-left positioning, z-index, hover width tooltip, and click-to-hide behavior are built into the component itself, so those parts do not depend on the consuming app generating matching Tailwind utilities.
+
 ## Install
 
 ```sh
@@ -118,7 +120,7 @@ If you do not see the dot at all in a consuming app, check Tailwind scanning fir
 
 ## Tailwind Setup
 
-This package intentionally uses Tailwind classes. Make sure Tailwind scans the package output so these classes are generated.
+This package still uses Tailwind classes for the breakpoint visibility logic itself. Make sure Tailwind scans the package output so those breakpoint classes are generated.
 
 ```js
 /** @type {import('tailwindcss').Config} */
@@ -139,27 +141,7 @@ If your setup does not scan dependencies, safelist the classes used by the indic
 ```js
 export default {
   safelist: [
-    'group',
-    'fixed',
-    'bottom-1',
-    'left-1',
-    'z-[100000000000]',
-    'flex',
-    'h-6',
-    'w-6',
-    'cursor-pointer',
-    'select-none',
-    'items-center',
-    'justify-center',
-    'rounded-full',
-    'border-0',
-    'bg-[rgba(0,0,0,0.4)]',
-    'p-4',
-    'font-mono',
-    'text-xs',
-    'text-white',
     'relative',
-    'appearance-none',
     'block',
     'hidden',
     'sm:hidden',
@@ -172,29 +154,11 @@ export default {
     'xl:block',
     '2xl:hidden',
     '2xl:block',
-    'pointer-events-none',
-    'absolute',
-    'left-10',
-    'top-1/2',
-    'whitespace-nowrap',
-    'rounded-[6px]',
-    'bg-[rgba(0,0,0,0.78)]',
-    'px-2',
-    'py-[6px]',
-    'leading-none',
-    'opacity-0',
-    '-translate-y-1/2',
-    'translate-x-1',
-    'translate-x-0',
-    'transition-all',
-    'duration-150',
-    'group-hover:translate-x-0',
-    'group-hover:opacity-100',
-    'group-focus-visible:translate-x-0',
-    'group-focus-visible:opacity-100',
   ],
 }
 ```
+
+If the indicator shows up but sits in the wrong place in a consuming app, upgrade to a version that includes the inline positioning fix. Older versions relied on Tailwind-generated layout utilities such as `bottom-2`, `left-2`, and `z-[100000000000]`, which can be missing even when the component itself renders.
 
 ## Props
 
@@ -204,6 +168,7 @@ type Breakpoint = 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl'
 interface TailwindBreakpointIndicatorProps {
   enabled?: boolean
   className?: string
+  style?: React.CSSProperties
   labels?: Partial<Record<Breakpoint, string>>
 }
 ```
@@ -223,7 +188,15 @@ process.env.NEXT_PUBLIC_ENV === 'dev'
 Adds extra classes to the outer wrapper.
 
 ```tsx
-<TailwindBreakpointIndicator enabled className="bottom-4 left-4" />
+<TailwindBreakpointIndicator enabled className="shadow-xl" />
+```
+
+### `style`
+
+Overrides the default inline positioning or visual styles.
+
+```tsx
+<TailwindBreakpointIndicator enabled style={{ bottom: '16px', left: '16px' }} />
 ```
 
 ### `labels`
